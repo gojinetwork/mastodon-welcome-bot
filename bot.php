@@ -7,7 +7,7 @@ Author: https://github.com/yzyjim/
 
 **/
 
-// Mastodon and RSS feed configuration:
+// Mastodon and welcome message configuration:
 
 $token="YOUR_TOKEN_HERE"; // Token of your Mastodon welcome bot account
 $account_id="123"; // User ID (an integer) of your welcome bot account
@@ -64,7 +64,7 @@ if ($last_user_id == $newest_user_id) {
     fwrite($writestorage, $newest_user_id);
     fclose($writestorage);
 
-    // Post Mastodon message
+    // Post Mastodon message through Mastodon API
 
     $headers = [
       'Authorization: Bearer ' . $token ;
