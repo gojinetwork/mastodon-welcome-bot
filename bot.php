@@ -52,12 +52,14 @@ fclose($readstorage);
 
 // Compare the previously stored follower ID with current latest follower ID
 
-if ($last_user_id == $newest_user_id) {
-  
-  echo "<br>No new user";
-  
-} else {
+if ($last_user_id == "") {
+    $writestorage = fopen("newest_user_id.txt", "w") or die("Unable to open file!");
+    fwrite($writestorage, $newest_user_id);
+    fclose($writestorage);
+}
 
+if (($last_user_id != $newest_user_id) && ($last_user_id != "")) {
+  
     // Write current follower ID to newest_user_id.txt
 
     $writestorage = fopen("newest_user_id.txt", "w") or die("Unable to open file!");
@@ -67,10 +69,10 @@ if ($last_user_id == $newest_user_id) {
     // Post Mastodon message through Mastodon API
 
     $headers = [
-      'Authorization: Bearer ' . $token ;
+      'Authorization: Bearer ' . $token
     ];
   
-  	$post="";
+    $post="";
 
     $status_data = array(
       "status" => "@" . $newest_user_username . " " . $welcome_message ,
@@ -86,5 +88,10 @@ if ($last_user_id == $newest_user_id) {
     curl_setopt($ch_status, CURLOPT_HTTPHEADER, $headers);
     $output_status = json_decode(curl_exec($ch_status));
     curl_close ($ch_status);
+
+} else {
+
+    echo "<br>No new user";
+
 }
 
