@@ -58,7 +58,7 @@ if ($last_user_id == "") {
     fclose($writestorage);
 }
 
-if (($last_user_id != $newest_user_id) && ($last_user_id != "")) {
+if (($last_user_id != $newest_user_id) && ($last_user_id != "") && ($newest_user_id != "")) {
   
     // Write current follower ID to newest_user_id.txt
 
@@ -95,3 +95,4 @@ if (($last_user_id != $newest_user_id) && ($last_user_id != "")) {
 
 }
 
+?>
