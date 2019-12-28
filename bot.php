@@ -9,6 +9,7 @@ Author: https://github.com/yzyjim/
 
 // Mastodon and welcome message configuration:
 
+$path_to_file='/FILE_PATH_HERE/';
 $token="YOUR_TOKEN_HERE"; // Token of your Mastodon welcome bot account
 $account_id="123"; // User ID (an integer) of your welcome bot account
 $base_url="https://example.com"; // URL of your instance (Do not include '/' at the end.)
@@ -45,15 +46,15 @@ echo $newest_user_id;
 
 // Read the previously stored follower ID from newest_user_id.txt
 
-$readstorage = fopen("newest_user_id.txt", "r") or die("Unable to open file!");
-$last_user_id = fread($readstorage,filesize("newest_user_id.txt"));
+$readstorage = fopen($path_to_file."newest_user_id.txt", "r") or die("Unable to open file!");
+$last_user_id = fread($readstorage,filesize($path_to_file."newest_user_id.txt"));
 echo "<br>last_user_id is: " . $last_user_id;
 fclose($readstorage);
 
 // Compare the previously stored follower ID with current latest follower ID
 
 if ($last_user_id == "") {
-    $writestorage = fopen("newest_user_id.txt", "w") or die("Unable to open file!");
+    $writestorage = fopen($path_to_file."newest_user_id.txt", "w") or die("Unable to open file!");
     fwrite($writestorage, $newest_user_id);
     fclose($writestorage);
 }
@@ -62,7 +63,7 @@ if (($last_user_id != $newest_user_id) && ($last_user_id != "") && ($newest_user
   
     // Write current follower ID to newest_user_id.txt
 
-    $writestorage = fopen("newest_user_id.txt", "w") or die("Unable to open file!");
+    $writestorage = fopen($path_to_file."newest_user_id.txt", "w") or die("Unable to open file!");
     fwrite($writestorage, $newest_user_id);
     fclose($writestorage);
 
