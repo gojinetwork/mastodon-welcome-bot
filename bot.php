@@ -1,24 +1,37 @@
+
+
 <?php
 
 /**
 
 PLEASE FOLLOW THE STEPS IN README.MD
-Author: https://github.com/yzyjim/
 
 **/
 
 // Mastodon and welcome message configuration:
 
-$path_to_file='/FILE_PATH_HERE/';
-$token="YOUR_TOKEN_HERE"; // Token of your Mastodon welcome bot account
-$account_id="123"; // User ID (an integer) of your welcome bot account
-$base_url="https://example.com"; // URL of your instance (Do not include '/' at the end.)
-$visibility="direct"; // "Direct" means sending welcome message as a private message. The four tiers of visibility for toots are Public , Unlisted, Private, and Direct (default)
-$welcome_message="Welcome!\n\nSecond line"; // Welcome message
-$language="en"; // en for English, zh for Chinese, etc.
+$token="YOUR_TOKEN_HERE";
+// Token of your Mastodon welcome bot account
+
+$account_id="123";
+// User ID (an integer) of your welcome bot account
+
+$base_url="https://example.com";
+// URL of your instance (Do not include '/' at the end.)
+
+$visibility="direct";
+// "Direct" means sending welcome message as a private message. The four tiers of visibility for toots are Public , Unlisted, Private, and Direct (default)
+
+$welcome_message="Welcome!\n\nSecond line";
+// Welcome message
+
+$language="en";
+// en for English, zh for Chinese, etc.
 
 // End of configuration. You don't need to edit anything below.
 
+// Define ROOTPATH
+define('ROOTPATH', __DIR__);
 
 // Retrieve the user ID of the latest follower of your bot account
 
@@ -46,15 +59,15 @@ echo $newest_user_id;
 
 // Read the previously stored follower ID from newest_user_id.txt
 
-$readstorage = fopen($path_to_file."newest_user_id.txt", "r") or die("Unable to open file!");
-$last_user_id = fread($readstorage,filesize($path_to_file."newest_user_id.txt"));
-echo "<br>last_user_id is: " . $last_user_id;
+$readstorage = fopen(ROOTPATH."/newest_user_id.txt", "r") or die("Unable to open file!");
+$last_user_id = fread($readstorage,filesize(ROOTPATH."/newest_user_id.txt"));
+echo "\n\nlast_user_id is: " . $last_user_id;
 fclose($readstorage);
 
 // Compare the previously stored follower ID with current latest follower ID
 
 if ($last_user_id == "") {
-    $writestorage = fopen($path_to_file."newest_user_id.txt", "w") or die("Unable to open file!");
+    $writestorage = fopen(ROOTPATH."/newest_user_id.txt", "w") or die("Unable to open file!");
     fwrite($writestorage, $newest_user_id);
     fclose($writestorage);
 }
@@ -63,7 +76,7 @@ if (($last_user_id != $newest_user_id) && ($last_user_id != "") && ($newest_user
   
     // Write current follower ID to newest_user_id.txt
 
-    $writestorage = fopen($path_to_file."newest_user_id.txt", "w") or die("Unable to open file!");
+    $writestorage = fopen(ROOTPATH."/newest_user_id.txt", "w") or die("Unable to open file!");
     fwrite($writestorage, $newest_user_id);
     fclose($writestorage);
 
@@ -92,8 +105,9 @@ if (($last_user_id != $newest_user_id) && ($last_user_id != "") && ($newest_user
 
 } else {
 
-    echo "<br>No new user";
+    echo "\nNo new user\n";
 
 }
 
 ?>
+
