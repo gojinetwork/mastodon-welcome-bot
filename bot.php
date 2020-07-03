@@ -64,11 +64,6 @@ $last_user_id = fread($readstorage,filesize(ROOTPATH."/newest_user_id.txt"));
 
 echo "last user: ".$newest_user_id ."\n";
 
-// Read the previously stored follower ID from newest_user_id.txt
-
-$readstorage = fopen(ROOTPATH."/newest_user_id.txt", "r") or die("Unable to open file!");
-$last_user_id = fread($readstorage,filesize(ROOTPATH."/newest_user_id.txt"));
-echo "\n\nlast_user_id is: " . $last_user_id."\n";
 fclose($readstorage);
 
 // Compare the previously stored follower ID with current latest follower ID
