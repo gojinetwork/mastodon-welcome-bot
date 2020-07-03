@@ -61,7 +61,14 @@ echo $newest_user_id;
 
 $readstorage = fopen(ROOTPATH."/newest_user_id.txt", "r") or die("Unable to open file!");
 $last_user_id = fread($readstorage,filesize(ROOTPATH."/newest_user_id.txt"));
-echo "\n\nlast_user_id is: " . $last_user_id;
+
+echo "last user: ".$newest_user_id ."\n";
+
+// Read the previously stored follower ID from newest_user_id.txt
+
+$readstorage = fopen(ROOTPATH."/newest_user_id.txt", "r") or die("Unable to open file!");
+$last_user_id = fread($readstorage,filesize(ROOTPATH."/newest_user_id.txt"));
+echo "\n\nlast_user_id is: " . $last_user_id."\n";
 fclose($readstorage);
 
 // Compare the previously stored follower ID with current latest follower ID
@@ -79,30 +86,46 @@ if (($last_user_id != $newest_user_id) && ($last_user_id != "") && ($newest_user
     $writestorage = fopen(ROOTPATH."/newest_user_id.txt", "w") or die("Unable to open file!");
     fwrite($writestorage, $newest_user_id);
     fclose($writestorage);
+    
+    // Loop the user list
+            
+    foreach ( array_reverse($json) as $user_json ) {
+        $user_id = $user_json['id'];
+        $user_username = $user_json['username'];
+        
+        if (($last_user_id < $user_id) && ($user_id != "")) {
+          
+            // Post Mastodon message through Mastodon API
 
-    // Post Mastodon message through Mastodon API
+            $headers = [
+              'Authorization: Bearer ' . $token
+            ];
+          
+            $post="";
 
-    $headers = [
-      'Authorization: Bearer ' . $token
-    ];
-  
-    $post="";
+            $status_data = array(
+              "status" => "@" . $user_username . " " . $welcome_message ,
+              "language" => $language,
+              "visibility" => $visibility
+            );
 
-    $status_data = array(
-      "status" => "@" . $newest_user_username . " " . $welcome_message ,
-      "language" => $language,
-      "visibility" => $visibility
-    );
+            $ch_status = curl_init();
+            curl_setopt($ch_status, CURLOPT_URL, $base_url . "/api/v1/statuses");
+            curl_setopt($ch_status, CURLOPT_POST, 1);
+            curl_setopt($ch_status, CURLOPT_POSTFIELDS, $status_data);
+            curl_setopt($ch_status, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch_status, CURLOPT_HTTPHEADER, $headers);
+            $output_status = json_decode(curl_exec($ch_status));
+            curl_close ($ch_status);
+            
+            echo "\nWelcome new user: ".$user_id.": @".$user_username."\n";
+            
+        } else {
+          
+            //echo "\nError handeling ".$user_id.": @".$user_username."\n";
 
-    $ch_status = curl_init();
-    curl_setopt($ch_status, CURLOPT_URL, $base_url . "/api/v1/statuses");
-    curl_setopt($ch_status, CURLOPT_POST, 1);
-    curl_setopt($ch_status, CURLOPT_POSTFIELDS, $status_data);
-    curl_setopt($ch_status, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch_status, CURLOPT_HTTPHEADER, $headers);
-    $output_status = json_decode(curl_exec($ch_status));
-    curl_close ($ch_status);
-
+        }
+    }
 } else {
 
     echo "\nNo new user\n";
@@ -110,4 +133,3 @@ if (($last_user_id != $newest_user_id) && ($last_user_id != "") && ($newest_user
 }
 
 ?>
-
